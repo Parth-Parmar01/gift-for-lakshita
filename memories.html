@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2e1330" />
+    <title>My feelings right now</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: "Outfit", "Segoe UI", sans-serif;
+        background: #170a18;
+        color: #fbefe0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        min-height: 100vh;
+        margin: 0;
+        background: radial-gradient(
+          125% 95% at 50% 82%,
+          #4a1e2e 0,
+          #2e1330 46%,
+          #170a18 100%
+        );
+      }
+      main {
+        width: min(100% - 32px, 980px);
+        margin: 0 auto;
+        padding: 24px 0 48px;
+      }
+      .back-link {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        padding: 0 12px;
+        border: 1px solid rgba(255, 231, 203, 0.26);
+        border-radius: 6px;
+        color: #f7e8d8;
+        font-size: 14px;
+        text-decoration: none;
+      }
+      header {
+        margin: 30px 0 28px;
+        text-align: center;
+      }
+      h1 {
+        margin: 0;
+        color: #fff2e1;
+        font-family: Georgia, serif;
+        font-size: clamp(32px, 7vw, 48px);
+        font-weight: 500;
+      }
+      header p {
+        margin: 10px 0 0;
+        color: #d8c2b2;
+        font-size: 16px;
+      }
+      .memory-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .memory-card[hidden] {
+        display: none;
+      }
+      .memory-photo {
+        position: relative;
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        padding: 0;
+        border: 1px solid rgba(255, 228, 197, 0.5);
+        border-radius: 8px;
+        background: rgba(20, 8, 18, 0.5);
+        box-shadow: 0 18px 44px rgba(12, 4, 12, 0.32);
+        cursor: pointer;
+        isolation: isolate;
+      }
+      .memory-photo img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        filter: blur(18px) brightness(0.68);
+        transform: scale(1);
+        transition: filter 0.85s ease, transform 0.85s ease;
+      }
+      .memory-photo.is-revealed img {
+        filter: blur(0) brightness(1);
+        transform: scale(1);
+      }
+      .memory-photo span {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        min-height: 100px;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 38px 18px 20px;
+        background: linear-gradient(transparent, rgba(22, 9, 21, 0.82));
+        color: #fff7ec;
+        font-size: 16px;
+        font-weight: 700;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
+        transition: opacity 0.4s ease;
+      }
+      .memory-photo.is-revealed span {
+        opacity: 0;
+      }
+      .memory-photo:disabled {
+        cursor: default;
+      }
+      .memory-card {
+        grid-column: span 2;
+        animation: appear 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+      }
+      .memory-card:nth-child(4) {
+        grid-column: 2 / span 2;
+      }
+      .memory-card:nth-child(5) {
+        grid-column: 4 / span 2;
+      }
+      .voice-note-button,
+      .password-submit {
+        min-height: 46px;
+        padding: 0 18px;
+        border: 1px solid rgba(255, 231, 203, 0.5);
+        border-radius: 6px;
+        background: rgba(255, 239, 220, 0.14);
+        color: #fff4e6;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .voice-note-button {
+        display: block;
+        margin: 18px auto 0;
+      }
+      .voice-note-button:hover,
+      .password-submit:hover {
+        background: rgba(255, 239, 220, 0.24);
+      }
+      .music-control {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 5;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1px solid rgba(255, 231, 203, 0.5);
+        border-radius: 6px;
+        background: rgba(35, 14, 30, 0.9);
+        color: #fff4e6;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .voice-note-button[hidden],
+      .password-form[hidden] {
+        display: none;
+      }
+      .password-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        width: min(100%, 460px);
+        margin: 18px auto 0;
+      }
+      .password-form label,
+      .password-form p {
+        grid-column: 1 / -1;
+      }
+      .password-form label {
+        color: #f7e8d8;
+        text-align: left;
+      }
+      .password-form input {
+        min-width: 0;
+        min-height: 46px;
+        padding: 0 12px;
+        border: 1px solid rgba(255, 231, 203, 0.34);
+        border-radius: 6px;
+        background: rgba(20, 8, 18, 0.56);
+        color: #fff4e6;
+        font: inherit;
+      }
+      .password-form p {
+        min-height: 22px;
+        color: #ffd1c9;
+        font-size: 14px;
+        text-align: left;
+      }
+      #progress[hidden] {
+        display: none;
+      }
+      #progress {
+        min-height: 24px;
+        margin: 24px 0 0;
+        color: #d8c2b2;
+        font-size: 14px;
+        text-align: center;
+      }
+      @keyframes appear {
+        from {
+          opacity: 0;
+          transform: translateY(16px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      @media (max-width: 620px) {
+        main {
+          width: min(100% - 24px, 460px);
+          padding-top: 14px;
+        }
+        header {
+          margin: 26px 0 22px;
+        }
+        .memory-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+        }
+        .memory-card {
+          grid-column: span 1;
+        }
+        .memory-card:nth-child(4),
+        .memory-card:nth-child(5) {
+          grid-column: span 1;
+        }
+        .password-form {
+          grid-template-columns: 1fr;
+        }
+        .password-form label,
+        .password-form p {
+          grid-column: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a class="back-link" href="index.html">&larr; Back to the surprise</a>
+      <header>
+        <h1>My feelings right now</h1>
+        <p>I still care about you, and I’m grateful for the good moments we shared. I don’t expect anything in return; I simply wish you happiness and peace.</p>
+      </header>
+      <section class="memory-grid" id="memory-grid" aria-label="Birthday photos">
+        <article class="memory-card">
+          <button class="memory-photo is-current" type="button" aria-label="Reveal photo 1">
+            <img src="assets/1.jpeg" alt="Birthday photo 1" />
+            <span>Tap to reveal photo 1</span>
+          </button>
+        </article>
+        <article class="memory-card" hidden>
+          <button class="memory-photo" type="button" aria-label="Reveal photo 2" disabled>
+            <img src="assets/2.jpeg" alt="Birthday photo 2" loading="lazy" />
+            <span>Tap to reveal photo 2</span>
+          </button>
+        </article>
+        <article class="memory-card" hidden>
+          <button class="memory-photo" type="button" aria-label="Reveal photo 3" disabled>
+            <img src="assets/3.jpeg" alt="Birthday photo 3" loading="lazy" />
+            <span>Tap to reveal photo 3</span>
+          </button>
+        </article>
+        <article class="memory-card" hidden>
+          <button class="memory-photo" type="button" aria-label="Reveal photo 4" disabled>
+            <img src="assets/4.jpeg" alt="Birthday photo 4" loading="lazy" />
+            <span>Tap to reveal photo 4</span>
+          </button>
+        </article>
+        <article class="memory-card" hidden>
+          <button class="memory-photo" type="button" aria-label="Reveal photo 5" disabled>
+            <img src="assets/5.jpeg" alt="Birthday photo 5" loading="lazy" />
+            <span>Tap to reveal photo 5</span>
+          </button>
+        </article>
+      </section>
+      <p id="progress" role="status" aria-live="polite">Photo 1 of 5 is waiting.</p>
+      <button class="voice-note-button" id="open-voice-gate" type="button" hidden>
+        One last message
+      </button>
+      <form class="password-form" id="voice-password-form" hidden>
+        <label for="voice-password">Enter Instagram username to continue</label>
+        <input id="voice-password" name="password" type="password" autocomplete="off" required />
+        <button class="password-submit" type="submit">Continue</button>
+        <p id="password-error" role="alert" aria-live="polite"></p>
+      </form>
+    </main>
+    <audio id="background-music" loop preload="none" aria-hidden="true">
+      <source src="bg%20music.mp3" type="audio/mpeg" />
+    </audio>
+    <button class="music-control" id="music-control" type="button" aria-label="Play background music" aria-pressed="false">
+      &#9835; Music off
+    </button>
+    <script>
+      (() => {
+        const cards = Array.from(document.querySelectorAll(".memory-card"));
+        const progress = document.getElementById("progress");
+        const openGateButton = document.getElementById("open-voice-gate");
+        const passwordForm = document.getElementById("voice-password-form");
+        const passwordInput = document.getElementById("voice-password");
+        const passwordError = document.getElementById("password-error");
+        const backgroundMusic = document.getElementById("background-music");
+        const musicControl = document.getElementById("music-control");
+        let currentIndex = 0;
+        let musicStarted = false;
+
+        function updateMusicControl() {
+          const isPlaying = !backgroundMusic.paused;
+          musicControl.innerHTML = isPlaying ? "&#9835; Music on" : "&#9835; Music off";
+          musicControl.setAttribute("aria-label", isPlaying ? "Pause background music" : "Play background music");
+          musicControl.setAttribute("aria-pressed", String(isPlaying));
+        }
+
+        async function startMusic() {
+          try {
+            await backgroundMusic.play();
+          } catch (error) {
+            musicStarted = false;
+          }
+          updateMusicControl();
+        }
+
+        musicControl.addEventListener("click", () => {
+          musicStarted = true;
+          if (backgroundMusic.paused) {
+            startMusic();
+          } else {
+            backgroundMusic.pause();
+          }
+        });
+        backgroundMusic.addEventListener("play", updateMusicControl);
+        backgroundMusic.addEventListener("pause", updateMusicControl);
+
+        openGateButton.addEventListener("click", () => {
+          openGateButton.hidden = true;
+          passwordForm.hidden = false;
+          passwordInput.focus();
+        });
+
+        passwordForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          if (passwordInput.value.trim().toLowerCase() !== "its_lakshitaa01") {
+            passwordError.textContent = "That username did not match. Hint: it ends with aa01.";
+            passwordInput.select();
+            return;
+          }
+
+          try {
+            window.sessionStorage.setItem("voice-note-unlocked", "true");
+          } catch (error) {}
+          window.location.href = "voice.html";
+        });
+
+        cards.forEach((card, index) => {
+          const button = card.querySelector(".memory-photo");
+          button.addEventListener("click", () => {
+            if (index !== currentIndex) return;
+            if (!musicStarted) {
+              musicStarted = true;
+              startMusic();
+            }
+
+            button.classList.add("is-revealed");
+            button.classList.remove("is-current");
+            button.disabled = true;
+            button.setAttribute("aria-label", `Photo ${index + 1} revealed`);
+            currentIndex += 1;
+
+            window.setTimeout(() => {
+              if (currentIndex < cards.length) {
+                const nextCard = cards[currentIndex];
+                const nextButton = nextCard.querySelector(".memory-photo");
+                nextCard.hidden = false;
+                nextButton.disabled = false;
+                nextButton.classList.add("is-current");
+                progress.textContent = `Photo ${currentIndex + 1} of ${cards.length} is waiting.`;
+                if (nextCard.getBoundingClientRect().bottom > window.innerHeight) {
+                  nextCard.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+              } else {
+                progress.textContent = "All five photos are revealed.";
+                openGateButton.hidden = false;
+              }
+            }, 420);
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

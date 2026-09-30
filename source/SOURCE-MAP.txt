@@ -1,0 +1,6 @@
+﻿Extracted from index.html without changing the live page.
+
+Styles: source/styles/*.css
+Scripts: source/scripts/*.js
+
+The original page remains index.html. The assets folder contains the scraped local libraries, metadata payloads, and images used by the page.

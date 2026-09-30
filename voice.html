@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2e1330" />
+    <title>One last message</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: "Outfit", "Segoe UI", sans-serif;
+        background: #170a18;
+        color: #fbefe0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        display: grid;
+        min-height: 100vh;
+        margin: 0;
+        padding: 24px;
+        place-items: center;
+        background: radial-gradient(
+          125% 95% at 50% 82%,
+          #4a1e2e 0,
+          #2e1330 46%,
+          #170a18 100%
+        );
+      }
+      main {
+        width: min(100%, 520px);
+        text-align: center;
+      }
+      .back-link {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        margin-bottom: 38px;
+        padding: 0 12px;
+        border: 1px solid rgba(255, 231, 203, 0.26);
+        border-radius: 6px;
+        color: #f7e8d8;
+        font-size: 14px;
+        text-decoration: none;
+      }
+      h1 {
+        margin: 0;
+        color: #fff2e1;
+        font-family: Georgia, serif;
+        font-size: 36px;
+        font-weight: 500;
+      }
+      .headphone-note {
+        margin: 16px 0 28px;
+        color: #d8c2b2;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+      audio {
+        display: block;
+        width: 100%;
+        margin: 0 auto;
+      }
+      .audio-error {
+        min-height: 24px;
+        margin-top: 14px;
+        color: #ffd1c9;
+        font-size: 14px;
+      }
+      @media (max-width: 480px) {
+        body {
+          padding: 18px;
+        }
+        h1 {
+          font-size: 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <a class="back-link" href="index.html">&larr; Back to the surprise</a>
+      <section aria-labelledby="voice-title">
+        <h1 id="voice-title">One last message</h1>
+        <p class="headphone-note">Please wear headphones or earphones, then press play.</p>
+        <audio controls controlsList="nodownload" preload="metadata" aria-label="Voice note">
+          <source src="assets/voice%20note.ogg" type='audio/ogg; codecs="opus"' />
+          Your browser does not support audio playback.
+        </audio>
+        <p class="audio-error" id="audio-error" role="status" aria-live="polite"></p>
+      </section>
+    </main>
+    <script>
+      try {
+        if (window.sessionStorage.getItem("voice-note-unlocked") !== "true") {
+          window.location.replace("memories.html");
+        }
+      } catch (error) {
+        window.location.replace("memories.html");
+      }
+
+      const voiceAudio = document.querySelector("audio");
+      voiceAudio.addEventListener("error", () => {
+        document.getElementById("audio-error").textContent =
+          "The voice note could not be loaded. Please check that the audio file is in the assets folder.";
+      });
+    </script>
+  </body>
+</html>

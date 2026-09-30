@@ -1,0 +1,60 @@
+[id$="-root"],
+[id$="-root"] * {
+  -webkit-tap-highlight-color: transparent;
+}
+[id$="-root"],
+[id$="-root"] .om-kb-scroll,
+[id$="-root"] [class*="-shell"],
+[id$="-root"] [class*="-step"] {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+[id$="-root"] [class*="-chip"],
+[id$="-root"] [class*="-tile"],
+[id$="-root"] [role="button"],
+[id$="-root"] button {
+  -webkit-user-select: none;
+  user-select: none;
+}
+[id$="-root"] [class*="share-url"],
+[id$="-root"] [contenteditable],
+[id$="-root"] input,
+[id$="-root"] textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+[id$="-root"] {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+[id$="-root"] [class*="-foot"] a,
+[id$="-root"] [class*="-footer"] a,
+[id$="-root"] [class*="-madeby"] a {
+  position: relative;
+}
+[id$="-root"] [class*="-foot"] a::after,
+[id$="-root"] [class*="-footer"] a::after,
+[id$="-root"] [class*="-madeby"] a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -14px;
+  bottom: -14px;
+}
+[id$="-root"] :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  [id$="-root"] *,
+  [id$="-root"] ::after,
+  [id$="-root"] ::before {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
